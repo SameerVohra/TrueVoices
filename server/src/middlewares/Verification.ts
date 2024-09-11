@@ -28,8 +28,8 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY as string) as DecodedUser;
-
-    if (!decoded || !decoded.id) {
+    console.log(decoded)
+    if (!decoded || !decoded.userId) {
       return res.status(400).send("Invalid token payload.");
     }
 

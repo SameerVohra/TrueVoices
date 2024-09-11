@@ -10,8 +10,21 @@ export const AddCompany = async(req:Request, res:Response) => {
     }
 
     else{
+      const generateId = (): string => {
+        const str: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+        let id: string = "";
+        const n : number = str.length;
+
+        while(id.length!==5){
+          let ind: number = Math.floor(Math.random()*n);
+          id+=str[ind];
+        }
+
+        console.log(id);
+        return id;
+      }
       const company = await companyModel.findOne({email});
-      const companyId: string = "function call";
+      let companyId: string = generateId();
       const compID = await companyModel.findOne({companyId});
       if(company){
         if(company.compName === compName)
@@ -19,11 +32,10 @@ export const AddCompany = async(req:Request, res:Response) => {
           return ;
       }
 
-      if(compID){
-        //TODO:call the function again;
-      }
-
       else{
+        if(compID){
+        companyId = generateId();
+        }
         const newCompany = new companyModel({
           compName: compName, 
           reviewURL: reviewURL, 
@@ -32,7 +44,7 @@ export const AddCompany = async(req:Request, res:Response) => {
         })
 
         await newCompany.save();
-        res.status(201).send({companyId: companyId});
+        res.status(201).send({companyId: companyId, companyName: compName, companyURL: reviewURL});
       }
     }
   } catch (error) {
