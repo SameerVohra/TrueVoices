@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import reviewModel from "../models/Review";
 export const AddReview = async(req: Request, res: Response) => {
-  const {name, review, stars} = req.body;
+  const {name, review, stars, compId} = req.body;
   try {
     if(name.trim() === "" || review.trim() === ""){
       res.status(400).send("All fields are required");
@@ -12,6 +12,8 @@ export const AddReview = async(req: Request, res: Response) => {
         username: name, 
         rating: stars,
         review: review,
+        companyId: compId,
+
       })
 
       await newReview.save();
