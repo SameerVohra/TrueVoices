@@ -19,9 +19,10 @@ const Login: React.FC = () => {
 
     try {
       const res = await axios.post(`${link.url}/login`, { username, password });
-
+      console.log(res);
       if (res.status === 201) {
         localStorage.setItem("token", res.data.authToken);
+        localStorage.setItem("email", res.data.email);        
         navigate("/home");
       }
     } catch (error) {

@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import companyModel from "../models/Company";
 export const AddCompany = async(req:Request, res:Response) => {
-  const {compName, reviewURL, email} = req.body;
+  const {compName, reviewURL, email, about} = req.body;
 
   try {
     if(compName.trim() === "" || email.trim() === ""){
@@ -41,10 +41,13 @@ export const AddCompany = async(req:Request, res:Response) => {
           reviewURL: reviewURL, 
           email: email, 
           companyId: companyId,
+          about: about,
         })
+        
+        console.log(newCompany)
 
         await newCompany.save();
-        res.status(201).send({companyId: companyId, companyName: compName, companyURL: reviewURL});
+        res.status(201).send(newCompany);
       }
     }
   } catch (error) {

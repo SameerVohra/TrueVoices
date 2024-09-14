@@ -37,9 +37,9 @@ export const Login = async(req: Request, res: Response): Promise<void> => {
         const token: string = jwt.sign(
           tokenPayload,
           process.env.SECRET_KEY as string,
-          {"expiresIn": "2h"}
+          {"expiresIn": "24h"}
         )
-        res.status(201).send({authToken: token});
+        res.status(201).send({authToken: token, email: user.email});
       }
     }
   } catch (error) {
