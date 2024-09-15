@@ -6,7 +6,6 @@ const AddCompany: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [about, setAbout] = useState<string>("");
   const [web, setWeb] = useState<string>("");
-  const [reviewURL, setReviewURL] = useState<string>("");
   const [err, setErr] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,8 +17,8 @@ const AddCompany: React.FC = () => {
       setErr("LOGIN TO CONTINUE");
       return;
     }
-    setReviewURL("url");
     try {
+      const reviewURL: string = "url";
       const addComp = async () => {
         console.log(name, about, email, web, reviewURL);
         const res = await axios.post(
