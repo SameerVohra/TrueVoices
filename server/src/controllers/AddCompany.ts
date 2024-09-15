@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
 import companyModel from "../models/Company";
 export const AddCompany = async(req:Request, res:Response) => {
-  const {compName, reviewURL, email, about} = req.body;
-
+  const {compName, reviewURL, email, about, compURL} = req.body;
+  console.log(compName, reviewURL, email, about, compURL)
   try {
-    if(compName.trim() === "" || email.trim() === ""){
+    if(compName.trim() === "" || email.trim() === "" || compURL.trim() === ""){
       res.status(402).send("All fields are required");
       return ;
     }
@@ -33,21 +33,21 @@ export const AddCompany = async(req:Request, res:Response) => {
       }
 
       else{
-        if(compID){
-        companyId = generateId();
-        }
+        if(compID?.companyId === companyId){
+        companyId = generateId()        }
         const newCompany = new companyModel({
           compName: compName, 
           reviewURL: reviewURL, 
           email: email, 
           companyId: companyId,
           about: about,
+          compURL: compURL,
         })
         
         console.log(newCompany)
 
         await newCompany.save();
-        res.status(201).send(newCompany);
+        res.status(201).json({newCompany});
       }
     }
   } catch (error) {

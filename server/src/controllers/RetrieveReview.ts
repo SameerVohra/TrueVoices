@@ -9,7 +9,7 @@ export const RetrieveReview = async(req:Request, res:Response) => {
       return;
     }
     else{
-      res.status(201).json(company);
+      res.status(201).json({company});
     }
   } catch (error) {
     console.error(error);

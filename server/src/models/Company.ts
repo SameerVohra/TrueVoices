@@ -6,6 +6,7 @@ interface company extends Document{
   email: string,
   companyId: string,
   about: string,
+  compURL: string
 }
 
 const comp: Schema = new mongoose.Schema({
@@ -14,6 +15,7 @@ const comp: Schema = new mongoose.Schema({
   email: {type: String},
   companyId: {type: String},
   about: {type: String},
+  compURL: {type: String}
 })
 
 const companyModel: Model<company> = mongoose.model<company>("Company", comp);
