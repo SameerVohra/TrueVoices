@@ -7,7 +7,7 @@ import Register from './components/Register.tsx'
 import Home from "./components/Home.tsx"
 import GetReviews from './components/GetReviews.tsx'
 import AddCompany from './components/AddCompany.tsx'
-
+import AddReview from"./components/AddReview.tsx"
 const route = createBrowserRouter([
   {
     path: "/",
@@ -32,6 +32,10 @@ const route = createBrowserRouter([
       {
         path: "/add-company",
         element: <AddCompany/>
+      },
+      {
+        path: "/add-review/:compName",
+        element: <AddReview/>
       }
     ]
   }

@@ -9,7 +9,7 @@ import { RetrieveReview } from "./controllers/RetrieveReview";
 import { GetCompanies } from "./controllers/GetCompanies";
 const app = express();
 
-app.use(cors({origin:"*"}))
+app.use(cors({origin:"*", methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],}))
 app.use(express.json())
 
 app.post("/login", Login);
