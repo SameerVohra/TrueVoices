@@ -6,6 +6,6 @@ export const GenerateURL = ({compName, compId}: URL): string => {
   let url: string = "http://localhost:5173";
   url+="/add-review"
   url+="/"+compName;
-  url+="?id="+compId;
+  url+="/"+compId;
   return url;
 }

@@ -34,7 +34,7 @@ const route = createBrowserRouter([
         element: <AddCompany/>
       },
       {
-        path: "/add-review/:compName",
+        path: "/add-review/:compName/:id",
         element: <AddReview/>
       }
     ]
