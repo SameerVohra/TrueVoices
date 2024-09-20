@@ -4,11 +4,15 @@ import link from "../assets/link.json";
 import Rating from '@mui/material/Rating';
 import { GenerateURL } from './GenerateURL';
 import { useParams } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 interface revData {
   username: string;
   rating: number;
   review: string;
+  _id: string;
+  approved: boolean;
 }
 
 const GetReviews: React.FC = () => {
@@ -20,6 +24,10 @@ const GetReviews: React.FC = () => {
   const [compURL, setCompURL] = useState<string>("");
   const [copied, setCopied] = useState<boolean>(false);
 
+  // Snackbar state
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+
   useEffect(() => {
     const token: string | null = localStorage.getItem("token");
     setCompURL(GenerateURL({ compId: compId, compName: compName }));
@@ -29,6 +37,7 @@ const GetReviews: React.FC = () => {
           { compId: compId }, 
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        console.log(typeof res.data.company[0]._id);
         setReviews(res.data.company);
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -57,9 +66,32 @@ const GetReviews: React.FC = () => {
     navigator.clipboard.writeText(compURL)
       .then(() => {
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);  // Reset after 2 seconds
+        setTimeout(() => setCopied(false), 2000); 
       })
       .catch((err) => console.error("Error copying URL: ", err));
+  };
+
+  const handleApprove = async (review: string, rating: number, username: string, _id: string) => {
+    try {
+      const token: string | null = localStorage.getItem("token");
+      const res = await axios.post(`${link.url}/approve`, {
+        compId: compId,
+        review: {review, rating, username},
+        revId: _id,
+      }, {headers: {Authorization: `Bearer ${token}`}})
+      
+      // Show snackbar with success message
+      setSnackbarMessage("Review approved successfully!");
+      setOpenSnackbar(true);
+
+      console.log(res);
+    } catch (error) {
+      console.error("Error approving review:", error);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -103,11 +135,31 @@ const GetReviews: React.FC = () => {
                 </button>
               )}
             </p>
+            {!rev.approved && (
+              <button 
+                onClick={() => handleApprove(rev.review, rev.rating, rev.username, rev._id)}
+                className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300"
+              >
+                Approve
+              </button>
+            )}
           </div>
         ))
       ) : (
         <p className="text-gray-800">No reviews available</p>
       )}
+
+      {/* Snackbar for success message */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

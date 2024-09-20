@@ -10,20 +10,21 @@ export const AddCompany = async(req:Request, res:Response) => {
     }
 
     else{
-          const newCompany = new companyModel({
-          compName: compName, 
-          reviewURL: reviewURL, 
-          email: email, 
-          companyId: companyId,
-          about: about,
-          compURL: compURL,
-        })
-        
-        console.log(newCompany)
+      const newCompany = new companyModel({
+        compName: compName, 
+        reviewURL: reviewURL, 
+        email: email, 
+        companyId: companyId,
+        about: about,
+        compURL: compURL,
+        reviews: []
+      })
+      
+      console.log(newCompany)
 
-        await newCompany.save();
-        res.status(201).json({newCompany});
-      } 
+      await newCompany.save();
+      res.status(201).json({newCompany});
+    } 
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
