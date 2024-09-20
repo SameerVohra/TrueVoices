@@ -10,15 +10,7 @@ export const AddCompany = async(req:Request, res:Response) => {
     }
 
     else{
-      const company = await companyModel.findOne({email});
-      if(company){
-        if(company.compName === compName)
-          res.status(409).send("A company with same name already registered");
-          return ;
-      }
-
-      else{
-        const newCompany = new companyModel({
+          const newCompany = new companyModel({
           compName: compName, 
           reviewURL: reviewURL, 
           email: email, 
@@ -31,8 +23,7 @@ export const AddCompany = async(req:Request, res:Response) => {
 
         await newCompany.save();
         res.status(201).json({newCompany});
-      }
-    }
+      } 
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

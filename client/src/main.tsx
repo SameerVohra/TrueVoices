@@ -26,7 +26,7 @@ const route = createBrowserRouter([
         element: <Home/>
       },
       {
-        path: "/reviews",
+        path: "/reviews/:compName",
         element: <GetReviews/>
       },
       {

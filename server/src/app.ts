@@ -18,4 +18,5 @@ app.post("/register-company", verifyToken, AddCompany);
 app.post("/add-review", AddReview);
 app.post("/get-review", verifyToken, RetrieveReview);
 app.post("/get-companies", verifyToken, GetCompanies);
+
 export default app;

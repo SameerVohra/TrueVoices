@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import link from "../assets/link.json";
 import Rating from '@mui/material/Rating';
+import { GenerateURL } from './GenerateURL';
+import { useParams } from 'react-router-dom';
 
 interface revData {
   username: string;
@@ -12,12 +14,15 @@ interface revData {
 const GetReviews: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const compId = params.get("id");
-
+  const { compName } = useParams<{ compName: string }>();
   const [reviews, setReviews] = useState<revData[]>([]);
   const [expandedReviews, setExpandedReviews] = useState<number[]>([]);
+  const [compURL, setCompURL] = useState<string>("");
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     const token: string | null = localStorage.getItem("token");
+    setCompURL(GenerateURL({ compId: compId, compName: compName }));
     const getRev = async () => {
       try {
         const res = await axios.post(`${link.url}/get-review`, 
@@ -48,8 +53,36 @@ const GetReviews: React.FC = () => {
     return words.slice(0, 10).join(" ") + "...";
   };
 
+  const handleCopyURL = () => {
+    navigator.clipboard.writeText(compURL)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);  // Reset after 2 seconds
+      })
+      .catch((err) => console.error("Error copying URL: ", err));
+  };
+
   return (
     <div className="container mx-auto p-4">
+      <div className="mb-4 flex items-center justify-center">
+        <span className="text-gray-700 mr-2">Review URL:</span>
+        <div className="flex items-center bg-gray-200 px-4 py-2 rounded-lg shadow">
+          <input
+            type="text"
+            value={compURL}
+            readOnly
+            className="bg-transparent outline-none text-blue-500 font-semibold w-fit"
+          />
+          <button
+            onClick={handleCopyURL}
+            className="ml-4 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+          >
+            Copy URL
+          </button>
+        </div>
+      </div>
+      {copied && <p className="text-center text-green-500 font-semibold">URL copied to clipboard!</p>}
+
       <h1 className="text-3xl font-bold mb-6 text-gray-600 text-center">Company Reviews</h1>
       {reviews.length > 0 ? (
         reviews.map((rev, index) => (
