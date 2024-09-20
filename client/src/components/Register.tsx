@@ -32,7 +32,7 @@ const Register: React.FC = () => {
       });
 
       if (res.status === 200) {
-        navigate("/login");
+        navigate("/");
       } else {
         setErr(res.data.message || "An error occurred during registration.");
       }
