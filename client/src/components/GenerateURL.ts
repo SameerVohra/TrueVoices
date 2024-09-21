@@ -3,7 +3,7 @@ interface URL{
   compId: string,
 }
 export const GenerateURL = ({compName, compId}: URL): string => {
-  let url: string = "http://localhost:5173";
+  let url: string = "https://truevoices.vercel.app";
   url+="/add-review"
   url+="/"+compName;
   url+="/"+compId;
