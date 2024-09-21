@@ -21,11 +21,9 @@ const EmbeddedReviews: React.FC = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const token: string | null = localStorage.getItem("token");
         const res = await axios.post(
           `${link.url}/get-review`,
-          { compId },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { compId }
         );
         const approvedReviews = res.data.filter((rev: Review) => rev.approved);
         setReviews(approvedReviews);

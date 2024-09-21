@@ -30,16 +30,13 @@ const GetReviews: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
   useEffect(() => {
-    const token: string | null = localStorage.getItem("token");
     const validCompID = compId || "";
     const validCompName = compName || "";
     setCompURL(GenerateURL({ compId: validCompID, compName: validCompName }));
     const getRev = async () => {
       try {
         const res = await axios.post(`${link.url}/get-review`, 
-          { compId: compId }, 
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+          { compId: compId }        );
         console.log(res);
         setReviews(res.data);
       } catch (error) {

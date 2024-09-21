@@ -19,11 +19,9 @@ const ApprovedReviews: React.FC = () => {
 
   useEffect(() => {
     const data = async () => {
-      const token: string | null = localStorage.getItem("token");
       const res = await axios.post(
         `${link.url}/get-review`,
         { compId: compId },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
       const rev = res.data;
       const approvedRev = rev.filter((r: Approved) => r.approved === true);
