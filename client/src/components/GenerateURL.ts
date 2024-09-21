@@ -1,8 +1,8 @@
 interface URL{
-  compName: string | null | undefined,
-  compId: string | null | undefined,
+  compName: string,
+  compId: string,
 }
-export const GenerateURL = ({compName, compId}: URL): string | null => {
+export const GenerateURL = ({compName, compId}: URL): string => {
   let url: string = "http://localhost:5173";
   url+="/add-review"
   url+="/"+compName;

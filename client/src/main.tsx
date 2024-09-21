@@ -8,6 +8,7 @@ import Home from "./components/Home.tsx"
 import GetReviews from './components/GetReviews.tsx'
 import AddCompany from './components/AddCompany.tsx'
 import AddReview from"./components/AddReview.tsx"
+import ApprovedReviews from './components/ApprovedReviews.tsx'
 const route = createBrowserRouter([
   {
     path: "/",
@@ -36,6 +37,10 @@ const route = createBrowserRouter([
       {
         path: "/add-review/:compName/:id",
         element: <AddReview/>
+      },
+      {
+        path: "/approved-reviews",
+        element: <ApprovedReviews/>
       }
     ]
   }

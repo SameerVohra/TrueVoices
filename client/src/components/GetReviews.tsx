@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import link from "../assets/link.json";
 import Rating from '@mui/material/Rating';
 import { GenerateURL } from './GenerateURL';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
@@ -16,6 +16,7 @@ interface revData {
 }
 
 const GetReviews: React.FC = () => {
+  const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const compId = params.get("id");
   const { compName } = useParams<{ compName: string }>();
@@ -30,7 +31,9 @@ const GetReviews: React.FC = () => {
 
   useEffect(() => {
     const token: string | null = localStorage.getItem("token");
-    setCompURL(GenerateURL({ compId: compId, compName: compName }));
+    const validCompID = compId || "";
+    const validCompName = compName || "";
+    setCompURL(GenerateURL({ compId: validCompID, compName: validCompName }));
     const getRev = async () => {
       try {
         const res = await axios.post(`${link.url}/get-review`, 
@@ -114,26 +117,34 @@ const handleRemove = async (ind: number, compId: string) => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4 flex items-center justify-center">
-        <span className="text-gray-700 mr-2">Review URL:</span>
-        <div className="flex items-center bg-gray-200 px-4 py-2 rounded-lg shadow">
+      <div className="mb-6 flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
+        <div className="flex items-center bg-gray-200 px-4 py-2 rounded-lg shadow-md">
+          <span className="text-gray-700 mr-2">Review URL:</span>
           <input
             type="text"
             value={compURL}
             readOnly
-            className="bg-transparent outline-none text-blue-500 font-semibold w-fit"
+            className="bg-transparent outline-none text-blue-500 font-semibold w-full md:w-auto"
           />
-          <button
-            onClick={handleCopyURL}
-            className="ml-4 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-          >
-            Copy URL
-          </button>
         </div>
+        <button
+          onClick={handleCopyURL}
+          className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          Copy URL
+        </button>
+        <button
+          onClick={() => navigate(`/approved-reviews?id=${compId}`)}
+          className="px-3 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-300"
+        >
+          Show Approved Reviews
+        </button>
       </div>
-      {copied && <p className="text-center text-green-500 font-semibold">URL copied to clipboard!</p>}
+
+      {copied && <p className="text-center text-green-500 font-semibold mb-4">URL copied to clipboard!</p>}
 
       <h1 className="text-3xl font-bold mb-6 text-gray-600 text-center">Company Reviews</h1>
+      
       {reviews.length > 0 ? (
         reviews.map((rev, index) => (
           <div
@@ -169,11 +180,10 @@ const handleRemove = async (ind: number, compId: string) => {
                 Remove
               </button>
             )}
-
           </div>
         ))
       ) : (
-        <p className="text-gray-800">No reviews available</p>
+        <p className="text-gray-800 text-center">No reviews available</p>
       )}
  
       <Snackbar
