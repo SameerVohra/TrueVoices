@@ -1,25 +1,41 @@
-import mongoose, {Document, Schema, Model} from "mongoose";
+import mongoose, { Document, Schema, Model } from "mongoose";
 
-interface company extends Document{
-  compName: string,
-  reviewURL: string,
-  email: string,
-  companyId: string,
-  about: string,
-  compURL: string
-  reviews: [{}]
+interface Review {
+  username: string;
+  rating: number;
+  review: string;
+  compId: string;
+  approved: boolean;
 }
 
-const comp: Schema = new mongoose.Schema({
-  compName: {type: String},
-  reviewURL: {type: String},
-  email: {type: String},
-  companyId: {type: String},
-  about: {type: String},
-  compURL: {type: String},
-  reviews: {type: Array}
-})
+interface Company extends Document {
+  compName: string;
+  reviewURL: string;
+  email: string;
+  companyId: string;
+  about: string;
+  compURL: string;
+  reviews: Review[];
+}
 
-const companyModel: Model<company> = mongoose.model<company>("Company", comp);
+const reviewSchema: Schema = new mongoose.Schema({
+  username: { type: String},
+  rating: { type: Number},
+  review: { type: String},
+  compId: { type: String},
+  approved: { type: Boolean, default: false }
+});
+
+const companySchema: Schema = new mongoose.Schema({
+  compName: { type: String},
+  reviewURL: { type: String},
+  email: { type: String},
+  companyId: { type: String},
+  about: { type: String },
+  compURL: { type: String },
+  reviews: [reviewSchema]
+});
+
+const companyModel: Model<Company> = mongoose.model<Company>("Company", companySchema);
 
 export default companyModel;

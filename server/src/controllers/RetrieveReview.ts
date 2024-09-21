@@ -1,15 +1,14 @@
 import {Request, Response} from "express";
-import reviewModel from "../models/Review";
+import companyModel from "../models/Company";
 export const RetrieveReview = async(req:Request, res:Response) => {
   const {compId}  = req.body;
   try {
-    const company = await reviewModel.find({companyId: compId});
-    if(!company){
-      res.status(404).send("No such company");
-      return;
+    const comp = await companyModel.findOne({companyId: compId});
+    if(!comp){
+      return res.status(404).send("No such company");
     }
     else{
-      res.status(201).json({company});
+      res.status(201).send(comp.reviews);
     }
   } catch (error) {
     console.error(error);

@@ -9,6 +9,7 @@ import { RetrieveReview } from "./controllers/RetrieveReview";
 import { GetCompanies } from "./controllers/GetCompanies";
 import GetCompanyDetails from "./controllers/GetCompanyDetails";
 import ApproveReview from "./controllers/ApproveReview";
+import RemoveReview from "./controllers/RemoveReview";
 const app = express();
 
 app.use(cors({origin:"*", methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],}))
@@ -22,5 +23,6 @@ app.post("/get-review", verifyToken, RetrieveReview);
 app.post("/get-companies", verifyToken, GetCompanies);
 app.post("/get-companydetails", GetCompanyDetails);
 app.post("/approve", verifyToken, ApproveReview);
+app.delete("/remove", verifyToken, RemoveReview);
 
 export default app;

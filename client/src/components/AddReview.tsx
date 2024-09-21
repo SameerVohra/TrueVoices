@@ -41,10 +41,10 @@ const AddReview: React.FC = () => {
     }
 
     try {
-      const res = await axios.post(`${link.url}/add-review`, {
-        name: username,
+      await axios.post(`${link.url}/add-review`, {
+        username: username,
         review: review,
-        stars: rating,
+        rating: rating,
         compId: id,
       });
 

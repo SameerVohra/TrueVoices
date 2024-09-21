@@ -11,8 +11,8 @@ interface revData {
   username: string;
   rating: number;
   review: string;
-  _id: string;
   approved: boolean;
+  compId: string;
 }
 
 const GetReviews: React.FC = () => {
@@ -37,8 +37,8 @@ const GetReviews: React.FC = () => {
           { compId: compId }, 
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        console.log(typeof res.data.company[0]._id);
-        setReviews(res.data.company);
+        console.log(res);
+        setReviews(res.data);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -71,24 +71,42 @@ const GetReviews: React.FC = () => {
       .catch((err) => console.error("Error copying URL: ", err));
   };
 
-  const handleApprove = async (review: string, rating: number, username: string, _id: string) => {
+  const handleApprove = async (ind: number, compId: string) => {
     try {
       const token: string | null = localStorage.getItem("token");
       const res = await axios.post(`${link.url}/approve`, {
         compId: compId,
-        review: {review, rating, username},
-        revId: _id,
+        ind: ind,
       }, {headers: {Authorization: `Bearer ${token}`}})
       
       // Show snackbar with success message
       setSnackbarMessage("Review approved successfully!");
       setOpenSnackbar(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
 
       console.log(res);
     } catch (error) {
       console.error("Error approving review:", error);
     }
   };
+
+  
+const handleRemove = async (ind: number, compId: string) => {
+  try {
+    const token: string | null = localStorage.getItem("token");
+
+    const res = await axios.delete(`${link.url}/remove`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { compId: compId, ind: ind } 
+    });
+    console.log(res);
+    window.location.reload();
+  } catch (error) {
+    console.error("Error removing review: ", error);
+  }
+};
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -137,19 +155,27 @@ const GetReviews: React.FC = () => {
             </p>
             {!rev.approved && (
               <button 
-                onClick={() => handleApprove(rev.review, rev.rating, rev.username, rev._id)}
+                onClick={() => handleApprove(index, rev.compId)}
                 className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300"
               >
                 Approve
               </button>
             )}
+            {rev.approved && (
+              <button 
+                onClick={() => handleRemove(index, rev.compId)}
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+              >
+                Remove
+              </button>
+            )}
+
           </div>
         ))
       ) : (
         <p className="text-gray-800">No reviews available</p>
       )}
-
-      {/* Snackbar for success message */}
+ 
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}

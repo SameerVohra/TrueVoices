@@ -1,26 +1,22 @@
-import { Request, Response } from "express"
-import reviewModel from "../models/Review";
-export const AddReview = async(req: Request, res: Response) => {
-  const {name, review, stars, compId} = req.body;
+import { Request, Response } from "express";
+import companyModel from "../models/Company";
+
+export const AddReview = async (req: Request, res: Response) => {
+  const { username, review, rating, compId } = req.body;
+
   try {
-    if(name.trim() === "" || review.trim() === ""){
-      res.status(400).send("All fields are required");
-      return;
+    const comp = await companyModel.findOne({ companyId: compId });
+    if (!comp) {
+      return res.status(404).send("Company not found");
     }
-    else{
-      const newReview = new reviewModel({
-        username: name, 
-        rating: stars,
-        review: review,
-        companyId: compId,
 
-      })
+    comp.reviews.push({ username, rating, review, compId, approved: false });
 
-      await newReview.save();
-      res.status(201).send(newReview)
-    }
+    await comp.save();
+
+    res.status(200).send("Review added successfully");
   } catch (error) {
     console.error(error);
-    res.status(501).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
-}
+};
