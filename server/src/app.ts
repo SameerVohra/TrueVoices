@@ -19,7 +19,7 @@ app.post("/login", Login);
 app.post("/register", Register);
 app.post("/register-company", verifyToken, AddCompany);
 app.post("/add-review", AddReview);
-app.post("/get-review", verifyToken, RetrieveReview);
+app.post("/get-review", RetrieveReview);
 app.post("/get-companies", verifyToken, GetCompanies);
 app.post("/get-companydetails", GetCompanyDetails);
 app.post("/approve", verifyToken, ApproveReview);
