@@ -9,12 +9,22 @@
   "routes": [
     { "handle": "filesystem" },
     {
-      "src": "/src/(.*)",
-      "dest": "src/$1.ts"
+      "src": "/api/(.*)",
+      "dest": "/src/$1.ts"
     },
     {
       "src": "/(.*)",
-      "dest": "src/server.ts"
+      "dest": "/src/server.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
