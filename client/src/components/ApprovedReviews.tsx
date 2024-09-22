@@ -2,6 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import link from "../assets/link.json";
 import Rating from "@mui/material/Rating";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 interface Approved {
   approved: boolean;
@@ -16,6 +21,7 @@ const ApprovedReviews: React.FC = () => {
   const compId = params.get("id");
   const [reviews, setReviews] = useState<Approved[]>([]);
   const [shareableLink, setShareableLink] = useState<string>("");
+  const [style, setStyle] = useState<string>("card");
 
   useEffect(() => {
     const data = async () => {
@@ -27,14 +33,13 @@ const ApprovedReviews: React.FC = () => {
       const approvedRev = rev.filter((r: Approved) => r.approved === true);
       setReviews(approvedRev);
 
-      // Set the shareable link when data is loaded
       if (compId) {
-        const generatedLink = `${window.location.origin}/embed-reviews?id=${compId}`;
+        const generatedLink = `${window.location.origin}/embed-reviews?id=${compId}&style=${style}`;
         setShareableLink(generatedLink);
       }
     };
     data();
-  }, [compId]);
+  }, [compId, style]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`<iframe src="${shareableLink}" width="600" height="400"></iframe>`);
@@ -71,12 +76,23 @@ const ApprovedReviews: React.FC = () => {
         </p>
       )}
 
-      {/* Shareable link section */}
+    <FormControl>
+      <FormLabel id="demo-row-radio-buttons-group-label">STYLE</FormLabel>
+      <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+          value={style}
+          onChange={(e)=>setStyle(e.currentTarget.value)}
+      >
+        <FormControlLabel value="card" control={<Radio />} label="CARDS" />
+        <FormControlLabel value="carousel" control={<Radio />} label="CAROUSEL" />
+        <FormControlLabel value="grid" control={<Radio />} label="GRID LAYOUT" />
+      </RadioGroup>
+    </FormControl>
+
       {shareableLink && (
         <div className="mt-10">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Shareable Embed Code:
-          </h2>
           <div className="bg-gray-100 p-4 rounded-md">
             <p className="text-gray-700 mb-4">
               Copy this code and paste it into your website to display the

@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import link from "../assets/link.json";
-import Rating from "@mui/material/Rating";
+import Card from "./EmbeddedReviewsStyle/Card";
+import Grid from "./EmbeddedReviewsStyle/Grid";
+import Carousel from "./EmbeddedReviewsStyle/Carousel";
 
 interface Review {
   approved: boolean;
@@ -14,6 +16,7 @@ interface Review {
 const EmbeddedReviews: React.FC = () => {
   const params = new URLSearchParams(window.location.search);
   const compId = params.get("id") || "";
+  const style = params.get("style") || "";
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -21,13 +24,11 @@ const EmbeddedReviews: React.FC = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axios.post(
-          `${link.url}/get-review`,
-          { compId }
-        );
+        const res = await axios.post(`${link.url}/get-review`, { compId });
         const approvedReviews = res.data.filter((rev: Review) => rev.approved);
         setReviews(approvedReviews);
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch reviews.");
       } finally {
         setLoading(false);
@@ -48,20 +49,11 @@ const EmbeddedReviews: React.FC = () => {
   return (
     <div className="container mx-auto p-6">
       {reviews.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((r, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-lg rounded-lg p-6 border border-gray-200"
-            >
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{r.username}</h2>
-              <p className="text-yellow-500 font-medium mb-4">
-                Rating: <Rating name="read-only" value={r.rating} readOnly />
-              </p>
-              <p className="text-gray-600 italic">"{r.review}"</p>
-            </div>
-          ))}
-        </div>
+        <>
+          {style === "card" && <Card reviews={reviews} />}
+          {style === "grid" && <Grid reviews={reviews} />}
+          {style === "carousel" && <Carousel reviews={reviews} />}
+        </>
       ) : (
         <p className="text-center text-gray-600">No reviews available.</p>
       )}
